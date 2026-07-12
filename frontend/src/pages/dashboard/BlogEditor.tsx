@@ -146,6 +146,7 @@ export const BlogEditor = () => {
   const { profile } = useOutletContext<{ profile: any }>();
   const [loading, setLoading] = useState(id ? true : false);
   const [saving, setSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   
   // Taxonomies State
   const [categories, setCategories] = useState<any[]>([]);
@@ -239,6 +240,7 @@ export const BlogEditor = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsUploading(true);
     const formData = new FormData();
     formData.append('image', file);
 
@@ -254,6 +256,8 @@ export const BlogEditor = () => {
     } catch (err) {
       console.error(err);
       alert('Image upload failed');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -461,9 +465,18 @@ export const BlogEditor = () => {
                       </div>
                    ) : (
                       <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <UploadCloud size={24} className="text-gray-400 mb-2" />
-                        <span className="text-sm font-medium text-gray-500">Upload Image</span>
-                        <input type="file" className="hidden" accept="image/png, image/jpeg, image/webp" onChange={handleImageUpload} />
+                        {isUploading ? (
+                          <>
+                            <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+                            <span className="text-sm font-medium text-gray-500">Uploading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <UploadCloud size={24} className="text-gray-400 mb-2" />
+                            <span className="text-sm font-medium text-gray-500">Upload Image</span>
+                          </>
+                        )}
+                        <input type="file" className="hidden" accept="image/png, image/jpeg, image/webp" onChange={handleImageUpload} disabled={isUploading} />
                       </label>
                    )}
                  </div>

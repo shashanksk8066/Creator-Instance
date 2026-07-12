@@ -69,8 +69,8 @@ app.get('/api/dashboard/notifications', verifyAuth, requireCreator, getUserNotif
 app.post('/api/dashboard/notifications/:id/read', verifyAuth, requireCreator, markNotificationRead);
 
 // Webhook Routes (Public, Meta hits these)
-app.get('/webhook', verifyWebhook);
-app.post('/webhook', handleWebhook);
+app.get('/api/webhook', verifyWebhook);
+app.post('/api/webhook', handleWebhook);
 
 // Admin Routes
 app.get('/api/admin/analytics/overview', verifyAuth, requireAdmin, getAdminOverviewAnalytics);

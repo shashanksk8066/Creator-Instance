@@ -149,7 +149,7 @@ export const MetaSettings = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Webhook Callback URL</label>
               <input 
                 type="text" 
-                value={oauthRedirectUri ? `${oauthRedirectUri.split('/api/instagram')[0]}/webhook` : ''}
+                value={oauthRedirectUri ? `${oauthRedirectUri.split('/api/instagram')[0]}/api/webhook` : ''}
                 disabled
                 className="w-full bg-gray-100 border border-gray-200 text-gray-500 rounded-lg cursor-not-allowed block p-2.5 outline-none"
                 placeholder="Auto-generated from OAuth URL"
