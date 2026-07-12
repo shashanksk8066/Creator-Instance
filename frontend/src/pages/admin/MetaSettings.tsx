@@ -9,6 +9,10 @@ export const MetaSettings = () => {
   const [webhookVerifyToken, setWebhookVerifyToken] = useState('');
   const [oauthRedirectUri, setOauthRedirectUri] = useState('');
   const [adsterraApiKey, setAdsterraApiKey] = useState('');
+  const [googleDriveFolderLink, setGoogleDriveFolderLink] = useState('');
+  const [googleClientId, setGoogleClientId] = useState('');
+  const [googleClientSecret, setGoogleClientSecret] = useState('');
+  const [googleRefreshToken, setGoogleRefreshToken] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +30,10 @@ export const MetaSettings = () => {
           setWebhookVerifyToken(data.webhookVerifyToken || '');
           setOauthRedirectUri(data.oauthRedirectUri || '');
           setAdsterraApiKey(data.adsterraApiKey || '');
+          setGoogleDriveFolderLink(data.googleDriveFolderLink || '');
+          setGoogleClientId(data.googleClientId || '');
+          setGoogleClientSecret(data.googleClientSecret || '');
+          setGoogleRefreshToken(data.googleRefreshToken || '');
         }
       } catch (err) {
         console.error('Failed to load settings', err);
@@ -46,7 +54,10 @@ export const MetaSettings = () => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ appId, appSecret, webhookVerifyToken, oauthRedirectUri, adsterraApiKey })
+        body: JSON.stringify({ 
+          appId, appSecret, webhookVerifyToken, oauthRedirectUri, adsterraApiKey, 
+          googleDriveFolderLink, googleClientId, googleClientSecret, googleRefreshToken 
+        })
       });
 
       if (!res.ok) throw new Error('Failed to save');
@@ -163,6 +174,64 @@ export const MetaSettings = () => {
               className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-colors"
               placeholder="••••••••••••••••••••••••••••••••"
             />
+          </div>
+        </div>
+
+        {/* Google Drive Container */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit lg:col-span-2">
+          <div className="mb-6 border-b border-gray-100 pb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Google Drive Backup</h2>
+            <p className="text-sm text-gray-500 mt-1">Configure automated image backups using Google OAuth2 to bypass service account quota limits.</p>
+          </div>
+          
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Drive Folder Link</label>
+              <input 
+                type="text" 
+                value={googleDriveFolderLink}
+                onChange={(e) => setGoogleDriveFolderLink(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-colors"
+                placeholder="e.g. https://drive.google.com/drive/folders/1Ix72ai..."
+              />
+              <p className="text-xs text-gray-500 mt-2">Paste the full URL of your personal Google Drive folder.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Google Client ID</label>
+                <input 
+                  type="text" 
+                  value={googleClientId}
+                  onChange={(e) => setGoogleClientId(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-colors"
+                  placeholder="e.g. 12345-abcde.apps.googleusercontent.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Google Client Secret</label>
+                <input 
+                  type="password" 
+                  value={googleClientSecret}
+                  onChange={(e) => setGoogleClientSecret(e.target.value)}
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-colors"
+                  placeholder="••••••••••••••••"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">OAuth Refresh Token</label>
+              <input 
+                type="password" 
+                value={googleRefreshToken}
+                onChange={(e) => setGoogleRefreshToken(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-colors"
+                placeholder="1//0eX..."
+              />
+              <p className="text-xs text-gray-500 mt-2">The offline refresh token generated from Google OAuth Playground or your custom script.</p>
+            </div>
           </div>
         </div>
 

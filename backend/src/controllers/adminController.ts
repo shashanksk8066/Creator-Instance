@@ -141,7 +141,7 @@ export const getMetaSettings = async (req: Request, res: Response): Promise<void
     const docSnap = await docRef.get();
 
     if (!docSnap.exists) {
-      res.json({ appId: '', appSecret: '', webhookVerifyToken: '', oauthRedirectUri: '', adsterraApiKey: '' });
+      res.json({ appId: '', appSecret: '', webhookVerifyToken: '', oauthRedirectUri: '', adsterraApiKey: '', googleDriveFolderLink: '', googleClientId: '', googleClientSecret: '', googleRefreshToken: '' });
       return;
     }
 
@@ -153,7 +153,7 @@ export const getMetaSettings = async (req: Request, res: Response): Promise<void
 
 export const updateMetaSettings = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { appId, appSecret, webhookVerifyToken, oauthRedirectUri, adsterraApiKey } = req.body;
+    const { appId, appSecret, webhookVerifyToken, oauthRedirectUri, adsterraApiKey, googleDriveFolderLink, googleClientId, googleClientSecret, googleRefreshToken } = req.body;
 
     const docRef = db.collection('platform_settings').doc('meta_config');
     await docRef.set({
@@ -162,6 +162,10 @@ export const updateMetaSettings = async (req: Request, res: Response): Promise<v
       webhookVerifyToken: webhookVerifyToken || '',
       oauthRedirectUri: oauthRedirectUri || '',
       adsterraApiKey: adsterraApiKey || '',
+      googleDriveFolderLink: googleDriveFolderLink || '',
+      googleClientId: googleClientId || '',
+      googleClientSecret: googleClientSecret || '',
+      googleRefreshToken: googleRefreshToken || '',
       updatedAt: new Date().toISOString()
     }, { merge: true });
 
