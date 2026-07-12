@@ -22,6 +22,7 @@ Creator Instance is a robust, multi-tenant platform designed to help content cre
 ### Backend
 - **Environment:** Node.js + Express + TypeScript
 - **Database:** Firebase Firestore
+- **Cache & Queue:** Redis (BullMQ / ioredis)
 - **Authentication:** Firebase Admin SDK
 - **Media Processing:** Multer + Sharp (WebP compression)
 - **External APIs:** Googleapis (OAuth2 Drive Backup), Axios
@@ -33,6 +34,7 @@ Creator Instance is a robust, multi-tenant platform designed to help content cre
 ### Prerequisites
 - Node.js (v18+)
 - NPM or Yarn
+- Redis Server (Running locally on port 6379, or a remote instance)
 - A Firebase Project (with Firestore and Authentication enabled)
 
 ### 1. Clone the repository
@@ -52,6 +54,7 @@ npm install
 Create a `.env` file in the `backend/` directory with the following:
 ```env
 PORT=3000
+REDIS_URL=redis://localhost:6379
 FIREBASE_PROJECT_ID=your-project-id
 FIREBASE_CLIENT_EMAIL=your-service-account-email
 FIREBASE_PRIVATE_KEY="your-private-key"
