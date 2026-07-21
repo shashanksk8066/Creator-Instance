@@ -45,10 +45,12 @@ export const tenantMiddleware = async (req: Request, res: Response, next: NextFu
     // 1. Check Cache
     const cachedTenant = await getCache(`tenant:${subdomain}`);
     if (cachedTenant) {
+      console.log(`[REDIS CACHE HIT] Loaded tenant data for ${subdomain} from Redis.`);
       req.tenant = JSON.parse(cachedTenant);
       return next();
     }
     
+    console.log(`[REDIS CACHE MISS] Fetching tenant data for ${subdomain} from Firebase Firestore.`);
     // 2. Fallback to Firestore
     const subdomainsRef = db.collection('subdomains').doc(subdomain);
     const doc = await subdomainsRef.get();
