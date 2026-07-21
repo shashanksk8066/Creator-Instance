@@ -34,10 +34,10 @@ export const LandingPage = () => {
           <Zap size={16} className="text-blue-500" />
           <span>The ultimate monetization platform for creators</span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-[1.1] max-w-4xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-6 md:mb-8 leading-[1.1] max-w-4xl mx-auto px-2">
           Turn your <span className="text-blue-600">Instagram audience</span> into a publishing empire.
         </h1>
-        <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-600 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed px-2">
           Host premium blogs on your own branded instance. Automate DMs to drive traffic directly from your Reels. Monetize effortlessly with pre-integrated ad networks.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -136,12 +136,12 @@ export const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24">
-        <div className="max-w-4xl mx-auto px-4 text-center bg-black text-white py-16 rounded-[2rem] shadow-2xl relative overflow-hidden">
+      <section className="py-16 md:py-24">
+        <div className="max-w-4xl mx-4 md:mx-auto px-6 text-center bg-black text-white py-12 md:py-16 rounded-[2rem] shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-50"></div>
           <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-purple-600 rounded-full blur-[100px] opacity-30"></div>
           
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6 relative z-10">Ready to own your audience?</h2>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 md:mb-6 relative z-10">Ready to own your audience?</h2>
           <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto relative z-10">
             Join thousands of creators who are already monetizing their traffic independently.
           </p>
@@ -153,10 +153,10 @@ export const LandingPage = () => {
 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
           <Logo size="sm" className="opacity-80 grayscale" />
           
-          <div className="flex gap-6 text-sm font-medium text-gray-500">
+          <div className="flex flex-wrap justify-center md:justify-end gap-4 md:gap-6 text-sm font-medium text-gray-500">
             <Link to="/support" className="hover:text-gray-900 transition-colors">Support</Link>
             <Link to="/privacy" className="hover:text-gray-900 transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-gray-900 transition-colors">Terms of Service</Link>
