@@ -85,7 +85,7 @@ const worker = new Worker('auto-dm-queue', async (job: Job) => {
     } else {
       domain = process.env.FRONTEND_URL || 'http://localhost:5173';
     }
-    const blogUrl = `${domain}/blog/${blog?.slug}`;
+    const blogUrl = `${domain}/blogs/${blog?.slug}`;
 
     let greeting = matchedRule.greeting ? parseSpintax(matchedRule.greeting) : '';
     let bodyText = matchedRule.body ? parseSpintax(matchedRule.body) : '';
