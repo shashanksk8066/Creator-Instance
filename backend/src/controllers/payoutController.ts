@@ -125,7 +125,8 @@ export const getAdminPayouts = async (req: Request, res: Response): Promise<void
         creatorId: data.creatorId,
         availableBalance: data.availableBalance || 0,
         paidRevenue: data.paidRevenue || 0,
-        payoutDetails: data.payoutDetails || null
+        payoutDetails: data.payoutDetails || null,
+        lastRolloverMonth: data.lastRolloverMonth || 'Never'
       };
     });
 

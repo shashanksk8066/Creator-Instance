@@ -12,6 +12,7 @@ interface SubdomainPayoutInfo {
     bank?: { accountNo: string; ifsc: string; holderName: string };
     defaultMethod?: 'upi' | 'bank';
   } | null;
+  lastRolloverMonth?: string;
 }
 
 export const AdminPayouts = () => {
@@ -25,6 +26,7 @@ export const AdminPayouts = () => {
   const [payAmount, setPayAmount] = useState('');
   const [payRemarks, setPayRemarks] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [triggeringRollover, setTriggeringRollover] = useState(false);
   const [error, setError] = useState('');
 
   const fetchPayouts = async () => {
@@ -57,6 +59,29 @@ export const AdminPayouts = () => {
   useEffect(() => {
     fetchPayouts();
   }, []);
+
+  const handleTriggerRollover = async () => {
+    if (!window.confirm("Are you sure you want to trigger the monthly rollover manually? It will check the previous month's revenue and add it to the available balance for all subdomains. Subdomains already synced for the previous month will be automatically skipped to prevent double counting.")) return;
+    
+    setTriggeringRollover(true);
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch('/api/admin/rollover', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to trigger rollover');
+      }
+      alert('Monthly Rollover executed successfully!');
+      fetchPayouts(); // refresh table
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    } finally {
+      setTriggeringRollover(false);
+    }
+  };
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,8 +140,15 @@ export const AdminPayouts = () => {
           <p className="text-gray-500 mt-1">Manage and execute payouts for creators.</p>
         </div>
         
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+        <div className="flex flex-wrap items-center gap-4">
+          <button 
+            onClick={handleTriggerRollover}
+            disabled={triggeringRollover}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-medium text-sm shadow-sm transition-colors whitespace-nowrap"
+          >
+            {triggeringRollover ? 'Syncing...' : 'Trigger Manual Rollover'}
+          </button>
+          <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap">
             <input
               type="checkbox"
               checked={filterMin15}
@@ -156,6 +188,7 @@ export const AdminPayouts = () => {
                 <th className="px-6 py-4 font-semibold">Subdomain</th>
                 <th className="px-6 py-4 font-semibold">Available Balance</th>
                 <th className="px-6 py-4 font-semibold">Total Paid</th>
+                <th className="px-6 py-4 font-semibold">Last Synced</th>
                 <th className="px-6 py-4 font-semibold">Default Method</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -170,6 +203,7 @@ export const AdminPayouts = () => {
                   <td className="px-6 py-4 font-medium text-gray-900">{sub.subdomain}</td>
                   <td className="px-6 py-4 font-bold text-green-600">${sub.availableBalance.toFixed(2)}</td>
                   <td className="px-6 py-4 font-semibold text-blue-600">${sub.paidRevenue.toFixed(2)}</td>
+                  <td className="px-6 py-4 text-gray-500 font-mono text-sm">{sub.lastRolloverMonth || 'Never'}</td>
                   <td className="px-6 py-4">
                     {sub.payoutDetails && sub.payoutDetails.defaultMethod ? (
                       <span className="inline-flex items-center gap-1 text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded font-medium text-xs">

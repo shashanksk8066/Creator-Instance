@@ -10,8 +10,12 @@ import {
   Zap,
   DollarSign,
   CreditCard,
-  HelpCircle
+  HelpCircle,
+  ExternalLink,
+  LogOut
 } from 'lucide-react';
+import { auth } from '../config/firebase';
+import { signOut } from 'firebase/auth';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { Logo } from './Logo';
@@ -20,15 +24,20 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
 }
 
-export const Sidebar = () => {
+export const Sidebar = ({ onMenuClick, profile }: { onMenuClick?: () => void, profile?: any }) => {
   const location = useLocation();
   const currentPath = location.pathname;
+
+  const siteUrl = profile?.subdomain 
+    ? `http://${profile.subdomain}.${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/`
+    : '/';
 
   const NavItem = ({ icon: Icon, label, href, active, hasSubmenu, badge }: any) => {
     const isActive = active || currentPath === href;
     return (
       <Link
         to={href}
+        onClick={onMenuClick}
         className={cn(
           "flex items-center justify-between px-3 py-2.5 mx-2 rounded-md transition-colors text-sm font-medium",
           isActive 
@@ -53,7 +62,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col overflow-y-auto hidden md:flex sticky top-0">
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col overflow-y-auto sticky top-0">
       <div className="py-4 flex items-center justify-center sticky top-0 bg-white z-10 border-b border-gray-100 min-h-[64px]">
         <Logo size="md" />
       </div>
@@ -84,9 +93,23 @@ export const Sidebar = () => {
         </div>
         <NavItem icon={HelpCircle} label="Support & Feedback" href="/dashboard/support" />
 
-        <div className="mt-4 border-t border-gray-100 pt-4">
+        <div className="mt-4 border-t border-gray-100 pt-4 pb-20 md:pb-4">
            <NavItem icon={Settings} label="Settings" href="/dashboard/settings" />
         </div>
+      </div>
+
+      <div className="md:hidden p-4 border-t border-gray-100 bg-gray-50 flex flex-col gap-3 shrink-0">
+        <a href={siteUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors w-full">
+          <ExternalLink size={18} className="text-gray-500" />
+          <span>View Site</span>
+        </a>
+        <button 
+          onClick={() => signOut(auth)}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors w-full"
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   );

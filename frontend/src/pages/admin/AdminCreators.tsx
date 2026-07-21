@@ -146,6 +146,7 @@ export const AdminCreators = () => {
                 <th className="p-4 font-semibold text-gray-600 text-sm">Name</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Email</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Subdomain</th>
+                <th className="p-4 font-semibold text-gray-600 text-sm">Total Views</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Category</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Status</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm w-10"></th>
@@ -170,6 +171,11 @@ export const AdminCreators = () => {
                     <td className="p-4">
                       <span className="text-blue-600 font-mono text-sm bg-blue-50 px-2 py-1 rounded-md">
                         {creator.subdomain}.{import.meta.env.VITE_BASE_DOMAIN || 'creatoros.com'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className="font-bold text-gray-900">
+                        {creator.totalViews?.toLocaleString() || '0'}
                       </span>
                     </td>
                     <td className="p-4">

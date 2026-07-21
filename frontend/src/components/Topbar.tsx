@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Bell, ExternalLink, LogOut, X, Info, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Bell, ExternalLink, LogOut, X, Info, AlertTriangle, CheckCircle, Menu } from 'lucide-react';
 import { auth } from '../config/firebase';
 import { signOut } from 'firebase/auth';
 import { clsx } from 'clsx';
 
-export const Topbar = ({ profile }: { profile?: any }) => {
+export const Topbar = ({ profile, onOpenMenu }: { profile?: any, onOpenMenu?: () => void }) => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifs, setShowNotifs] = useState(false);
 
@@ -50,8 +50,11 @@ export const Topbar = ({ profile }: { profile?: any }) => {
     : '/';
 
   return (
-    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-20">
-      <div className="flex items-center gap-4">
+    <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 md:px-6 sticky top-0 z-20">
+      <div className="flex items-center gap-3 md:gap-4">
+        <button onClick={onOpenMenu} className="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors">
+          <Menu size={24} />
+        </button>
         {profile?.subdomain && (
           <h1 className="text-xl font-bold text-gray-800 tracking-tight">
             {profile.subdomain}.{import.meta.env.VITE_BASE_DOMAIN || 'creatoros.com'}
@@ -114,14 +117,14 @@ export const Topbar = ({ profile }: { profile?: any }) => {
           )}
         </div>
         
-        <a href={siteUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-1.5 ml-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+        <a href={siteUrl} target="_blank" rel="noreferrer" className="hidden md:flex items-center gap-2 px-3 py-1.5 ml-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
           <ExternalLink size={16} className="text-gray-500" />
           <span>View Site</span>
         </a>
 
         <button 
           onClick={() => signOut(auth)}
-          className="flex items-center gap-2 px-3 py-1.5 ml-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+          className="hidden md:flex items-center gap-2 px-3 py-1.5 ml-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
         >
           <LogOut size={16} />
           <span>Logout</span>

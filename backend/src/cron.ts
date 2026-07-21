@@ -11,6 +11,8 @@ export const initCronJobs = () => {
     } catch (error) {
       console.error('[CRON] Adsterra Revenue Sync failed:', error);
     }
+  }, {
+    timezone: "Asia/Kolkata"
   });
 
   // Run on the 1st of every month at 10:00 AM for Monthly Rollover
@@ -22,6 +24,8 @@ export const initCronJobs = () => {
     } catch (error) {
       console.error('[CRON] Monthly Balance Rollover failed:', error);
     }
+  }, {
+    timezone: "Asia/Kolkata"
   });
 
   console.log('[CRON] Background jobs initialized.');

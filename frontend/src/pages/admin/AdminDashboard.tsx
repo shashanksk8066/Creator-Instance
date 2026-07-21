@@ -92,6 +92,7 @@ export const AdminDashboard = () => {
                 <th className="p-4 font-semibold text-gray-600 text-sm">Name</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Email</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Subdomain</th>
+                <th className="p-4 font-semibold text-gray-600 text-sm">Total Views</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Category</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm">Date Joined</th>
                 <th className="p-4 font-semibold text-gray-600 text-sm w-10"></th>
@@ -99,9 +100,9 @@ export const AdminDashboard = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {loading ? (
-                <TableLoader colSpan={6} text="Loading creators..." />
+                <TableLoader colSpan={7} text="Loading creators..." />
               ) : filteredCreators.length === 0 ? (
-                <TableLoader colSpan={6} text="All creators have added ads!" />
+                <TableLoader colSpan={7} text="All creators have added ads!" />
               ) : (
                 filteredCreators.map(creator => (
                   <tr 
@@ -116,6 +117,11 @@ export const AdminDashboard = () => {
                     <td className="p-4">
                       <span className="text-blue-600 font-mono text-sm bg-blue-50 px-2 py-1 rounded-md">
                         {creator.subdomain}.{import.meta.env.VITE_BASE_DOMAIN || 'creatoros.com'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className="font-bold text-gray-900">
+                        {creator.totalViews?.toLocaleString() || '0'}
                       </span>
                     </td>
                     <td className="p-4">

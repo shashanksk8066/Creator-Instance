@@ -16,6 +16,7 @@ const Card = ({ children, className = '' }: { children: React.ReactNode, classNa
 export const DashboardLayout = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -92,11 +93,23 @@ export const DashboardLayout = () => {
 
   // Normal Approved State
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <Topbar profile={profile} />
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-900 relative">
+      {/* Mobile Sidebar Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar Wrapper */}
+      <div className={`fixed inset-y-0 left-0 z-50 transform md:relative md:translate-x-0 transition-transform duration-200 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Sidebar profile={profile} onMenuClick={() => setIsMobileMenuOpen(false)} />
+      </div>
+
+      <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
+        <Topbar profile={profile} onOpenMenu={() => setIsMobileMenuOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
           <Outlet context={{ profile }} />
         </main>
       </div>

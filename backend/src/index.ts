@@ -24,7 +24,8 @@ import {
   getAllPublishedBlogs,
   reviewBlog,
   adminDeleteBlog,
-  adminDeleteCreator
+  adminDeleteCreator,
+  triggerManualRollover
 } from './controllers/adminController';
 import { uploadMiddleware, handleImageUpload, handleImageDelete } from './controllers/uploadController';
 import { getBlogs, getBlogById, createBlog, updateBlog, deleteBlog } from './controllers/blogController';
@@ -97,6 +98,7 @@ app.delete('/api/admin/ads/:id', verifyAuth, requireAdmin, deleteAd);
 
 app.get('/api/admin/payouts', verifyAuth, requireAdmin, getAdminPayouts);
 app.post('/api/admin/payouts/:subdomain/pay', verifyAuth, requireAdmin, executePayout);
+app.post('/api/admin/rollover', verifyAuth, requireAdmin, triggerManualRollover);
 app.get('/api/admin/support', verifyAuth, requireAdmin, getAllSupportTickets);
 app.put('/api/admin/support/:id', verifyAuth, requireAdmin, updateSupportTicketStatus);
 app.post('/api/admin/notifications', verifyAuth, requireAdmin, createNotification);

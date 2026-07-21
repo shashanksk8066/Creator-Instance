@@ -479,11 +479,22 @@ export const getAllCreators = async (req: Request, res: Response): Promise<void>
       }
     });
 
+    // Fetch all blogs to count views per creator
+    const blogsSnap = await db.collection('blogs').get();
+    const viewsMap: Record<string, number> = {};
+    blogsSnap.forEach(doc => {
+      const creatorId = doc.data().creatorId;
+      if (creatorId) {
+        viewsMap[creatorId] = (viewsMap[creatorId] || 0) + (doc.data().views || 0);
+      }
+    });
+
     const creators: any[] = [];
     snapshot.forEach(doc => {
       creators.push({ 
         uid: doc.id, 
         adsCount: adsCountMap[doc.id] || 0,
+        totalViews: viewsMap[doc.id] || 0,
         ...doc.data() 
       });
     });
@@ -816,5 +827,14 @@ export const runMonthlyRollover = async (): Promise<void> => {
   } catch (error: any) {
     log(`[ERROR] Monthly Rollover Failed: ${error.message}`);
     console.error('Monthly Rollover Error:', error);
+  }
+};
+
+export const triggerManualRollover = async (req: Request, res: Response): Promise<void> => {
+  try {
+    await runMonthlyRollover();
+    res.json({ message: 'Rollover executed successfully' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
