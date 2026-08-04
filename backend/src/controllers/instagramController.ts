@@ -161,7 +161,7 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
     try {
       const subscribeResponse = await axios.post(`https://graph.instagram.com/v25.0/me/subscribed_apps`, null, {
         params: {
-          subscribed_fields: 'comments',
+          subscribed_fields: 'comments,messages',
           access_token: accessToken
         }
       });
