@@ -1,0 +1,238 @@
+/* Login Page Styles */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    text-align: center;
+}
+
+.login-logo {
+    font-size: 40px;
+    color: var(--secondary-neon);
+    margin-bottom: 12dp;
+    filter: drop-shadow(0 0 8px var(--secondary-neon));
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 14px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: var(--secondary-neon);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(90deg, var(--primary-neon), var(--secondary-neon));
+    color: var(--text-primary);
+    border: none;
+    font-family: var(--font-main);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-cyan);
+}
+
+.login-error {
+    background: rgba(255, 23, 68, 0.15);
+    color: var(--accent-red);
+    border: 1px solid rgba(255, 23, 68, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+/* Tabs System (User Details) */
+.tab-header {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tab-btn.active {
+    color: var(--secondary-neon);
+    background: rgba(0, 229, 255, 0.08);
+    border-bottom: 2px solid var(--secondary-neon);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* User Profile & Device Info Details layouts */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-item {
+    margin-bottom: 18px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.info-val {
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-top: 4px;
+}
+
+/* Call log timeline and filters */
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    outline: none;
+}
+
+/* Notification Timeline bubble style */
+.timeline-stream {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.timeline-bubble {
+    border-left: 3px solid var(--secondary-neon);
+    padding-left: 16px;
+    padding-bottom: 4px;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.timeline-appname {
+    font-weight: 700;
+    color: var(--secondary-neon);
+}
+
+.timeline-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.timeline-message {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* Charts Wrapper */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.chart-container {
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.chart-canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .details-grid, .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}

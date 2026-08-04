@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Togalu Gombe - Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pages.css">
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <div class="glass-glow-bg glow-1"></div>
+    <div class="glass-glow-bg glow-2"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon">🎭</span>
+                <span class="brand-name">Togalu Gombe</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item"><a href="index.html"><span>🏠</span> Dashboard</a></li>
+                <li class="nav-item"><a href="users.html"><span>👥</span> Devices Directory</a></li>
+                <li class="nav-item"><a href="analytics.html"><span>📊</span> Global Analytics</a></li>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" id="btnLogout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content area -->
+        <main class="content-viewport">
+            <header class="content-header">
+                <div>
+                    <h1 class="page-title">Overview Dashboard</h1>
+                    <p class="page-subtitle">Consent-based monitoring network metrics console.</p>
+                </div>
+            </header>
+
+            <!-- Metrics widgets -->
+            <section class="metrics-grid">
+                <div class="glass-card metric-card">
+                    <div class="metric-icon">👥</div>
+                    <div class="metric-data">
+                        <span class="metric-value" id="countUsers">0</span>
+                        <span class="metric-label">Users Registered</span>
+                    </div>
+                </div>
+
+                <div class="glass-card metric-card">
+                    <div class="metric-icon">📱</div>
+                    <div class="metric-data">
+                        <span class="metric-value" id="countDevices">0</span>
+                        <span class="metric-label">Devices Online</span>
+                    </div>
+                </div>
+
+                <div class="glass-card metric-card">
+                    <div class="metric-icon">📞</div>
+                    <div class="metric-data">
+                        <span class="metric-value" id="countCalls">0</span>
+                        <span class="metric-label">Calls Logged</span>
+                    </div>
+                </div>
+
+                <div class="glass-card metric-card">
+                    <div class="metric-icon">💬</div>
+                    <div class="metric-data">
+                        <span class="metric-value" id="countNotifications">0</span>
+                        <span class="metric-label">Notifs Intercepted</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Telemetry list -->
+            <section class="glass-card">
+                <h3 style="margin-bottom: 20px;">Recent Activity Stream</h3>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Device model</th>
+                                <th>Hardware key</th>
+                                <th>Last synchronized</th>
+                                <th>Connection status</th>
+                                <th>Inspect</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivityTable">
+                            <tr>
+                                <td colspan="5" class="loading-indicator">
+                                    <div class="spinner"></div>Loading activity streams...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Core App JS -->
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

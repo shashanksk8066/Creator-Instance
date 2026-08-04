@@ -156,6 +156,20 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
       }
     }, { merge: true });
 
+    // 5. Subscribe Webhooks for this specific account
+    console.log('\n5. Calling POST https://graph.instagram.com/v25.0/me/subscribed_apps');
+    try {
+      const subscribeResponse = await axios.post(`https://graph.instagram.com/v25.0/me/subscribed_apps`, null, {
+        params: {
+          subscribed_fields: 'comments',
+          access_token: accessToken
+        }
+      });
+      console.log('Webhook subscription successful:', subscribeResponse.data);
+    } catch (subErr: any) {
+      console.error('Webhook subscription failed:', subErr.response?.data || subErr.message);
+    }
+
     // Redirect back to frontend
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     res.redirect(`${frontendUrl}/dashboard/auto-dm?success=true`);

