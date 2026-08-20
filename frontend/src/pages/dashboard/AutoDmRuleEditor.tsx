@@ -119,14 +119,18 @@ export const AutoDmRuleEditor = () => {
     }
   };
 
+  const addKeyword = () => {
+    const val = keywordInput.trim();
+    if (val && !keywords.includes(val.toLowerCase())) {
+      setKeywords([...keywords, val.toLowerCase()]);
+    }
+    setKeywordInput('');
+  };
+
   const handleAddKeyword = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      const val = keywordInput.trim();
-      if (val && !keywords.includes(val.toLowerCase())) {
-        setKeywords([...keywords, val.toLowerCase()]);
-      }
-      setKeywordInput('');
+      addKeyword();
     }
   };
 
@@ -304,14 +308,24 @@ export const AutoDmRuleEditor = () => {
                   </span>
                 ))}
               </div>
-              <input 
-                type="text" 
-                value={keywordInput}
-                onChange={(e) => setKeywordInput(e.target.value)}
-                onKeyDown={handleAddKeyword}
-                placeholder="Type a keyword and press Enter (e.g. LINK, JOB)"
-                className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none"
-              />
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyDown={handleAddKeyword}
+                  placeholder="Type a keyword (e.g. LINK, JOB)"
+                  className="flex-1 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={addKeyword}
+                  disabled={!keywordInput.trim()}
+                  className="px-5 py-2.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-medium text-sm disabled:opacity-50 transition-colors shrink-0"
+                >
+                  Add
+                </button>
+              </div>
             </div>
           )}
         </div>
