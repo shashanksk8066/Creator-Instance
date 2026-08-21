@@ -26,6 +26,11 @@ export const tenantMiddleware = async (req: Request, res: Response, next: NextFu
       return next();
     }
     
+    // Ignore local IP addresses
+    if (/^(\d{1,3}\.){3}\d{1,3}$/.test(hostname) || hostname === '127.0.0.1') {
+      return next();
+    }
+    
     // Extract subdomain assuming format: subdomain.baseDomain
     let subdomain = '';
     if (hostname.endsWith(`.${baseDomain}`)) {

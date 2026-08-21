@@ -65,8 +65,8 @@ export const CreatorSupport = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex justify-between items-end">
+    <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
             <HelpCircle className="text-blue-600" />
@@ -76,7 +76,7 @@ export const CreatorSupport = () => {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+          className="bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto"
         >
           <Plus size={18} />
           New Ticket
@@ -93,50 +93,89 @@ export const CreatorSupport = () => {
             <p className="mt-1">You haven't submitted any support tickets.</p>
           </div>
         ) : (
-          <table className="w-full text-left text-sm text-gray-600">
-            <thead className="bg-gray-50 text-gray-500 text-xs uppercase font-semibold">
-              <tr>
-                <th className="px-6 py-4">Subject</th>
-                <th className="px-6 py-4">Type</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600">
+                <thead className="bg-gray-50 text-gray-500 text-xs uppercase font-semibold">
+                  <tr>
+                    <th className="px-6 py-4">Subject</th>
+                    <th className="px-6 py-4">Type</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {tickets.map((t, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-gray-900">{t.subject}</p>
+                        <p className="text-gray-500 mt-1 truncate max-w-sm">{t.message}</p>
+                        {t.remarks && (
+                          <div className="mt-2 text-xs bg-gray-50 p-2 border border-gray-100 rounded-md">
+                            <span className="font-semibold text-gray-700">Admin Reply: </span>
+                            {t.remarks}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                          {t.type}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                          t.status === 'Resolved' ? 'bg-green-50 text-green-700 border border-green-200' :
+                          t.status === 'Open' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {t.status === 'Resolved' ? <CheckCircle2 size={12} /> : <Circle size={12} />}
+                          {t.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+                        {new Date(t.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col divide-y divide-gray-100">
               {tickets.map((t, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <p className="font-medium text-gray-900">{t.subject}</p>
-                    <p className="text-gray-500 mt-1 truncate max-w-sm">{t.message}</p>
-                    {t.remarks && (
-                      <div className="mt-2 text-xs bg-gray-50 p-2 border border-gray-100 rounded-md">
-                        <span className="font-semibold text-gray-700">Admin Reply: </span>
-                        {t.remarks}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                <div key={idx} className="p-4 flex flex-col gap-3">
+                  <div className="flex justify-between items-start">
+                    <span className="px-2 py-0.5 text-[11px] font-medium rounded bg-gray-100 text-gray-600">
                       {t.type}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium ${
                       t.status === 'Resolved' ? 'bg-green-50 text-green-700 border border-green-200' :
                       t.status === 'Open' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                       'bg-gray-100 text-gray-700'
                     }`}>
-                      {t.status === 'Resolved' ? <CheckCircle2 size={12} /> : <Circle size={12} />}
+                      {t.status === 'Resolved' ? <CheckCircle2 size={10} /> : <Circle size={10} />}
                       {t.status}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-500">
-                    {new Date(t.createdAt).toLocaleDateString()}
-                  </td>
-                </tr>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-sm leading-tight">{t.subject}</h3>
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{t.message}</p>
+                  </div>
+                  {t.remarks && (
+                    <div className="mt-1 text-xs bg-gray-50 p-2.5 border border-gray-100 rounded-lg">
+                      <span className="font-semibold text-gray-700 block mb-0.5">Admin Reply:</span>
+                      <span className="text-gray-600">{t.remarks}</span>
+                    </div>
+                  )}
+                  <div className="text-[11px] text-gray-400 mt-1 text-right">
+                    {new Date(t.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

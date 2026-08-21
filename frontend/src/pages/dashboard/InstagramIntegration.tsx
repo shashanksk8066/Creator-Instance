@@ -86,15 +86,15 @@ export const InstagramIntegration = () => {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
-      <div className="mb-8 flex justify-between items-center">
+    <div className="p-4 sm:p-8 max-w-4xl mx-auto">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Instagram Auto DM</h1>
-          <p className="text-gray-500 mt-1">Connect your Instagram professional accounts to automate private replies.</p>
+          <p className="text-gray-500 mt-1 text-sm sm:text-base">Connect your Instagram professional accounts to automate private replies.</p>
         </div>
         <button
           onClick={handleConnect}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm w-full sm:w-auto shrink-0"
         >
           <Plus size={20} />
           Add Account

@@ -161,20 +161,20 @@ export const CreatorPayouts = () => {
   };
 
   const SummaryCard = ({ title, value, icon: Icon }: { title: string, value: number, icon: any }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-start justify-between">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 flex items-start justify-between">
       <div className="min-w-0 flex-1 pr-2">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 whitespace-nowrap truncate">{title}</h3>
-        <span className="text-2xl lg:text-3xl font-black text-gray-900">${value.toFixed(2)}</span>
+        <h3 className="text-[11px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1 sm:mb-2 whitespace-nowrap truncate">{title}</h3>
+        <span className="text-xl sm:text-2xl lg:text-3xl font-black text-gray-900">${value.toFixed(2)}</span>
       </div>
-      <div className="p-3 rounded-2xl bg-gray-50 text-gray-700">
-        <Icon size={24} />
+      <div className="p-2 sm:p-3 rounded-2xl bg-gray-50 text-gray-700 flex-shrink-0">
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
     </div>
   );
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Payouts</h1>
           <p className="text-gray-500 mt-1">Track your earnings and configure your payment methods.</p>
@@ -184,7 +184,7 @@ export const CreatorPayouts = () => {
             setSettingsSuccess(false);
             setShowModal(true);
           }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors font-medium shadow-sm"
+          className="flex items-center justify-center sm:justify-start gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors font-medium shadow-sm w-full sm:w-auto"
         >
           <Settings size={18} />
           Setup Payout
@@ -201,7 +201,7 @@ export const CreatorPayouts = () => {
         <>
           {!data.payoutDetails?.defaultMethod && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h3 className="text-sm font-bold text-red-900">Action Required: Setup Payout Details</h3>
                 <p className="text-sm text-red-700 mt-1">
@@ -212,20 +212,20 @@ export const CreatorPayouts = () => {
           )}
 
           {/* Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             <SummaryCard title="This Month" value={data.thisMonthRevenue} icon={FileText} />
             <SummaryCard title="Last Month" value={data.lastMonthRevenue} icon={History} />
             <SummaryCard title="Available Balance" value={data.availableBalance} icon={Wallet} />
             <SummaryCard title="Total Paid" value={data.paidRevenue} icon={DollarSign} />
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-start gap-4">
-            <div className="p-2 bg-blue-100 rounded-full text-blue-700 mt-0.5">
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
+            <div className="p-2 bg-blue-100 rounded-full text-blue-700 mt-0.5 flex-shrink-0">
               <FileText size={18} />
             </div>
             <div>
-              <h3 className="text-base font-bold text-blue-900">Payout Schedule & Policies</h3>
-              <ul className="text-sm text-blue-800 mt-2 space-y-1.5 list-disc list-inside">
+              <h3 className="text-sm sm:text-base font-bold text-blue-900">Payout Schedule & Policies</h3>
+              <ul className="text-xs sm:text-sm text-blue-800 mt-2 space-y-1.5 list-disc list-inside">
                 <li><strong>Monthly Rollover:</strong> On the 1st of every month, your total revenue from the previous month is added to your Available Balance.</li>
                 <li><strong>Payout Window:</strong> Payouts are processed automatically between the <strong>1st and 10th</strong> of each month.</li>
                 <li><strong>Minimum Threshold:</strong> Payouts are only issued if your Available Balance is <strong>greater than $15</strong>.</li>
@@ -234,14 +234,16 @@ export const CreatorPayouts = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200 bg-gray-50/50">
+            <div className="p-4 sm:p-6 border-b border-gray-200 bg-gray-50/50">
               <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <History className="w-5 h-5 text-gray-500" />
                 Payout History
               </h2>
               <p className="text-sm text-gray-500 mt-1">Automatic deposits made to your account.</p>
             </div>
-            <div className="overflow-x-auto">
+            
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="bg-white border-b border-gray-100 text-gray-500 uppercase tracking-wider text-xs">
                   <tr>
@@ -270,6 +272,32 @@ export const CreatorPayouts = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col divide-y divide-gray-100">
+              {data.payouts.length === 0 ? (
+                <div className="p-8 text-center text-sm text-gray-500">No payouts have been processed yet.</div>
+              ) : data.payouts.map(payout => (
+                <div key={payout.id} className="p-4 flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-900">
+                      {new Date(payout.paidAt || payout.createdAt || '').toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </span>
+                    <span className="font-black text-green-600 text-lg">${payout.amount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-green-50 text-green-700 border border-green-200">
+                      <CheckCircle size={12} /> Paid
+                    </span>
+                    {payout.remarks && (
+                      <span className="text-[11px] text-gray-500 italic max-w-[60%] truncate">
+                        {payout.remarks}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </>

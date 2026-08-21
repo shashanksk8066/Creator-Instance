@@ -19,6 +19,11 @@ const invalidateAdCache = async (creatorId: string) => {
 
 export const getAdminAds = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Prevent browser caching in the admin panel
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     const { creatorId } = req.query;
     if (!creatorId) {
       res.status(400).json({ error: 'creatorId is required' });
@@ -154,6 +159,11 @@ export const deleteAd = async (req: Request, res: Response): Promise<void> => {
 
 export const getPublicAds = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Prevent browser caching so when we invalidate Redis, the client actually fetches new data
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     const creatorId = req.tenant?.creatorId;
     if (!creatorId) {
       res.status(404).json({ error: 'Tenant not found' });

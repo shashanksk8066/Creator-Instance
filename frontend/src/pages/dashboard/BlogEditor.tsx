@@ -332,19 +332,19 @@ export const BlogEditor = () => {
   if (loading) return <Loader text="Loading Editor..." />;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <button onClick={() => navigate('/dashboard/blogs')} className="flex items-center text-gray-500 hover:text-gray-900 transition-colors">
+    <div className="max-w-7xl mx-auto space-y-6 p-4 sm:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <button onClick={() => navigate('/dashboard/blogs')} className="flex items-center text-gray-500 hover:text-gray-900 transition-colors w-fit">
           <ChevronLeft size={20} /> Back to Blogs
         </button>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3 w-full sm:w-auto">
            <button 
              onClick={async () => {
                const token = await auth.currentUser?.getIdToken();
                const url = `http://${profile?.subdomain ? `${profile.subdomain}.` : ''}${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/blogs/${slug}?token=${token}`;
                window.open(url, '_blank');
              }}
-             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+             className="flex-1 sm:flex-none justify-center px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
            >
              Preview Live
            </button>
@@ -353,41 +353,45 @@ export const BlogEditor = () => {
                 if (window.confirm('Are you sure you want to save this as a draft?')) handleSave(false);
              }} 
              disabled={saving}
-             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+             className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
            >
-             <Save size={16} /> {saving ? 'Saving...' : (status === 'Draft' ? 'Drafted' : 'Save Draft')}
+             <Save size={16} className="hidden sm:block" /> {saving ? 'Saving...' : (status === 'Draft' ? 'Drafted' : 'Save Draft')}
            </button>
            <button 
              onClick={() => {
                 if (window.confirm('Are you sure you want to publish this blog live?')) handleSave(true);
              }} 
              disabled={saving}
-             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+             className="flex-1 sm:flex-none justify-center w-full sm:w-auto flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
            >
-             <CheckCircle size={16} /> {saving ? 'Publishing...' : (status === 'Published' ? 'Published' : 'Publish')}
+             <CheckCircle size={16} className="hidden sm:block" /> {saving ? 'Publishing...' : (status === 'Published' ? 'Published' : 'Publish')}
            </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* Main Editor Area */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-4 sm:space-y-6">
+           <div className="block lg:hidden">
+             <MenuBar editor={editor} />
+           </div>
+           
            <input 
              type="text" 
              value={title}
              onChange={(e) => setTitle(e.target.value)}
              placeholder="Blog Title..." 
-             className="w-full text-4xl font-bold text-gray-900 bg-transparent border-0 border-b-2 border-transparent hover:border-gray-200 focus:border-blue-500 focus:ring-0 px-0 py-2 transition-colors placeholder:text-gray-300"
+             className="w-full text-2xl sm:text-4xl font-bold text-gray-900 bg-transparent border-0 border-b-2 border-transparent hover:border-gray-200 focus:border-blue-500 focus:ring-0 px-0 py-2 transition-colors placeholder:text-gray-300"
            />
            
-           <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span>Slug: </span>
+           <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 bg-gray-50 p-2 sm:p-0 sm:bg-transparent rounded-lg">
+              <span className="font-medium sm:font-normal">Slug: </span>
               <input 
                 type="text" 
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="auto-generated-slug"
-                className="flex-1 bg-transparent border-none text-gray-500 focus:ring-0 focus:text-gray-900 p-0"
+                className="flex-1 bg-transparent border-none text-gray-500 focus:ring-0 focus:text-gray-900 p-0 text-xs sm:text-sm"
               />
            </div>
 
@@ -481,7 +485,9 @@ export const BlogEditor = () => {
                    )}
                  </div>
 
-                 <MenuBar editor={editor} />
+                 <div className="hidden lg:block">
+                   <MenuBar editor={editor} />
+                 </div>
                  
                  <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm space-y-4 mt-6">
                    <h3 className="font-semibold text-gray-900 mb-2">Categories & Tags</h3>

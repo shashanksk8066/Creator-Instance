@@ -81,20 +81,20 @@ export const CreatorAdsRevenue = () => {
   }, []);
 
   const SummaryCard = ({ title, dataObj }: { title: string, dataObj: typeof todayTotals }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">{title}</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5">
+      <h3 className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 sm:mb-4">{title}</h3>
       <div className="flex justify-between items-end">
         <div>
           <div className="mb-2">
-            <span className="text-2xl font-black text-gray-900">${(dataObj.revenue || 0).toFixed(2)}</span>
+            <span className="text-xl sm:text-2xl font-black text-gray-900">${(dataObj.revenue || 0).toFixed(2)}</span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-500 font-medium">
-            <div className="flex items-center gap-1.5">
-              <MousePointerClick className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 font-medium">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <MousePointerClick className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
               <span>{dataObj.clicks}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Eye className="w-4 h-4 text-gray-400" />
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
               <span>{dataObj.impressions}</span>
             </div>
           </div>
@@ -104,14 +104,14 @@ export const CreatorAdsRevenue = () => {
   );
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Ads Revenue</h1>
           <p className="text-gray-500 mt-1">Track your daily ad earnings and performance.</p>
         </div>
         {data?.lastRevenueSync && (
-          <div className="text-sm text-gray-500 bg-gray-100 px-4 py-2 rounded-lg border border-gray-200">
+          <div className="text-sm text-gray-500 bg-gray-100 px-4 py-2 rounded-lg border border-gray-200 self-start sm:self-auto">
             Last Synced: <span className="font-medium text-gray-700">{new Date(data.lastRevenueSync).toLocaleString()}</span>
           </div>
         )}
@@ -128,7 +128,7 @@ export const CreatorAdsRevenue = () => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8">
             <SummaryCard title="Today" dataObj={todayTotals} />
             <SummaryCard title="Yesterday" dataObj={yesterdayTotals} />
             <SummaryCard title="This Month" dataObj={monthTotals} />
@@ -139,13 +139,15 @@ export const CreatorAdsRevenue = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+            <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center">
               <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <Activity size={20} className="text-gray-500" />
                 Day-by-Day Breakdown
               </h4>
             </div>
-            <div className="overflow-x-auto">
+            
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="bg-gray-50 border-b border-gray-200 text-gray-600">
                   <tr>
@@ -157,9 +159,7 @@ export const CreatorAdsRevenue = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {(!data.dailyStats || data.dailyStats.length === 0) ? (
-                    <TableLoader colSpan={4} text="
-                        No daily stats available yet.
-                      " />
+                    <TableLoader colSpan={4} text="No daily stats available yet." />
                   ) : data.dailyStats.map(stat => (
                     <tr key={stat.date} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-900">{stat.date}</td>
@@ -170,6 +170,36 @@ export const CreatorAdsRevenue = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden flex flex-col divide-y divide-gray-100">
+              {(!data.dailyStats || data.dailyStats.length === 0) ? (
+                <div className="p-8 text-center text-sm text-gray-500">No daily stats available yet.</div>
+              ) : data.dailyStats.map(stat => (
+                <div key={stat.date} className="p-4 flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-900">{stat.date}</span>
+                    <span className="font-bold text-green-600 text-lg">${(stat.revenue || 0).toFixed(2)}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1 uppercase tracking-wider font-semibold">Clicks</div>
+                      <span className="text-gray-900 font-medium text-sm flex items-center gap-1.5">
+                        <MousePointerClick className="w-3.5 h-3.5 text-gray-400" />
+                        {stat.clicks}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1 uppercase tracking-wider font-semibold">Impressions</div>
+                      <span className="text-gray-900 font-medium text-sm flex items-center gap-1.5">
+                        <Eye className="w-3.5 h-3.5 text-gray-400" />
+                        {stat.impressions}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </>
