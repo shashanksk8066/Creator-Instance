@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
@@ -10,6 +10,7 @@ export const Register = () => {
   const [error, setError] = useState('');
   const [showConsent, setShowConsent] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -99,7 +100,16 @@ export const Register = () => {
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-              <input required type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" minLength={6} className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 border bg-gray-50" />
+              <div className="relative">
+                <input required type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" minLength={6} className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 border bg-gray-50 pr-10" />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
