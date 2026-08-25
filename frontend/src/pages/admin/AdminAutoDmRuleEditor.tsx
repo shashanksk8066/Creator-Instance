@@ -160,7 +160,9 @@ export const AdminAutoDmRuleEditor = () => {
   const handleSave = async () => {
     if (!selectedAccountId) return alert('Select an account.');
     if (triggerType === 'keyword' && keywords.length === 0) return alert('Add at least one keyword.');
-    if (!blogId) return alert('Select a published blog to link.');
+    if (!ctaText) return alert('Enter a button text.');
+    if (linkType === 'blog' && !blogId) return alert('Select a published blog to link.');
+    if (linkType === 'custom' && !customLink.trim()) return alert('Enter a valid custom link.');
     if (hasUrlError) {
       return alert('URLs are strictly prohibited in the message text. The platform will auto-generate the blog link.');
     }

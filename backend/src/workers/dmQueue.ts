@@ -63,29 +63,33 @@ const worker = new Worker('auto-dm-queue', async (job: Job) => {
       return;
     }
 
-    const blogDoc = await db.collection('blogs').doc(matchedRule.blogId).get();
-    if (!blogDoc.exists || blogDoc.data()?.status !== 'Published') {
-      appendLog('BLOG_NOT_FOUND_OR_NOT_PUBLISHED', { blogId: matchedRule.blogId });
-      await redisConnection.decr(`pending_dms:${igAccountId}`);
-      return;
-    }
-    const blog = blogDoc.data();
-
-    const baseDomain = process.env.BASE_DOMAIN || 'localhost';
-    const protocol = baseDomain === 'localhost' ? 'http' : 'https';
-    // Remove any port from baseDomain for the URL construction if it has one, or leave it. 
-    // Usually FRONTEND_URL is better. But we need subdomain.
-    let domain = '';
-    if (creator?.subdomain) {
-      if (baseDomain === 'localhost') {
-        domain = `http://${creator.subdomain}.localhost:5173`;
-      } else {
-        domain = `${protocol}://${creator.subdomain}.${baseDomain}`;
-      }
+    let targetUrl = '';
+    
+    if (matchedRule.customLink) {
+      targetUrl = matchedRule.customLink;
     } else {
-      domain = process.env.FRONTEND_URL || 'http://localhost:5173';
+      const blogDoc = await db.collection('blogs').doc(matchedRule.blogId).get();
+      if (!blogDoc.exists || blogDoc.data()?.status !== 'Published') {
+        appendLog('BLOG_NOT_FOUND_OR_NOT_PUBLISHED', { blogId: matchedRule.blogId });
+        await redisConnection.decr(`pending_dms:${igAccountId}`);
+        return;
+      }
+      const blog = blogDoc.data();
+
+      const baseDomain = process.env.BASE_DOMAIN || 'localhost';
+      const protocol = baseDomain === 'localhost' ? 'http' : 'https';
+      let domain = '';
+      if (creator?.subdomain) {
+        if (baseDomain === 'localhost') {
+          domain = `http://${creator.subdomain}.localhost:5173`;
+        } else {
+          domain = `${protocol}://${creator.subdomain}.${baseDomain}`;
+        }
+      } else {
+        domain = process.env.FRONTEND_URL || 'http://localhost:5173';
+      }
+      targetUrl = `${domain}/blogs/${blog?.slug}`;
     }
-    const blogUrl = `${domain}/blogs/${blog?.slug}`;
 
     let greeting = matchedRule.greeting ? parseSpintax(matchedRule.greeting) : '';
     let bodyText = matchedRule.body ? parseSpintax(matchedRule.body) : '';
@@ -98,7 +102,7 @@ const worker = new Worker('auto-dm-queue', async (job: Job) => {
     }
 
 
-    const messagePayload = buildButtonTemplate(messageText, matchedRule.ctaText, blogUrl);
+    const messagePayload = buildButtonTemplate(messageText, matchedRule.ctaText, targetUrl);
 
     appendLog('GENERATED_MESSAGE_PAYLOAD', { messagePayload });
 
