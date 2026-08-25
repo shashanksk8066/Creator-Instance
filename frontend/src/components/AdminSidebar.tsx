@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard,
+  MessageCircle,
   ShieldCheck, 
   Users,
   Megaphone,
@@ -87,6 +88,7 @@ export const AdminSidebar = () => {
         </div>
         <NavItem icon={HelpCircle} label="Support Tickets" href="/admin/support" />
         <NavItem icon={Bell} label="Send Notifications" href="/admin/notifications" />
+        <NavItem icon={MessageCircle} label="Instagram Auto DM" href="/admin/auto-dm" />
         <NavItem icon={Settings} label="Configuration" href="/admin/meta-settings" />
 
         <div className="mt-4 border-t border-gray-100 pt-4">

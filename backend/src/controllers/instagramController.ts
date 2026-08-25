@@ -51,6 +51,8 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
     }
 
     const uid = state as string;
+    const userDoc = await db.collection("users").doc(uid).get();
+    const role = userDoc.data()?.role;
     const config = await getMetaConfig();
     const appId = config?.appId;
     const appSecret = config?.appSecret;
@@ -172,10 +174,12 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
 
     // Redirect back to frontend
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    res.redirect(`${frontendUrl}/dashboard/auto-dm?success=true`);
+    const redirectPath = role === 'admin' ? '/admin/auto-dm' : '/dashboard/auto-dm';
+    res.redirect(`${frontendUrl}${redirectPath}?success=true`);
   } catch (error: any) {
-    console.error('Error in OAuth callback:', error);
+    console.error('Instagram auth error:', error.response?.data || error.message);
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // If we fail here, we might not have 'role' parsed correctly if it threw early, but let's do our best
     res.redirect(`${frontendUrl}/dashboard/auto-dm?error=auth_failed`);
   }
 };

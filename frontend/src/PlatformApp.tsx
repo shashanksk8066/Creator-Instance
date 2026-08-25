@@ -28,6 +28,9 @@ import { CreatorSettings } from './pages/dashboard/CreatorSettings';
 import { AdminOverview } from './pages/admin/AdminOverview';
 import { AdminCreators } from './pages/admin/AdminCreators';
 import { AdminBlogs } from './pages/admin/AdminBlogs';
+import { AdminInstagramIntegration } from "./pages/admin/AdminInstagramIntegration";
+import { AdminAutoDmRules } from "./pages/admin/AdminAutoDmRules";
+import { AdminAutoDmRuleEditor } from "./pages/admin/AdminAutoDmRuleEditor";
 import { LandingPage } from './pages/LandingPage';
 import { SupportPage } from './pages/SupportPage';
 import { PrivacyPolicy } from './pages/legal/PrivacyPolicy';
@@ -72,6 +75,10 @@ export const PlatformApp = () => {
         <Route path="support" element={<AdminSupport />} />
         <Route path="notifications" element={<AdminNotifications />} />
         <Route path="meta-settings" element={<MetaSettings />} />
+        <Route path="auto-dm" element={<AdminInstagramIntegration />} />
+        <Route path="auto-dm/rules" element={<AdminAutoDmRules />} />
+        <Route path="auto-dm/rules/new" element={<AdminAutoDmRuleEditor />} />
+        <Route path="auto-dm/rules/:id" element={<AdminAutoDmRuleEditor />} />
         <Route path="profile" element={<CreatorSettings />} />
       </Route>
 

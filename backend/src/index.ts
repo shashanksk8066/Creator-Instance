@@ -74,6 +74,14 @@ app.get('/api/webhook', verifyWebhook);
 app.post('/api/webhook', handleWebhook);
 
 // Admin Routes
+app.get("/api/admin/instagram/auth-url", verifyAuth, requireAdmin, generateAuthUrl);
+app.get("/api/admin/instagram/accounts", verifyAuth, requireAdmin, getAccounts);
+app.get("/api/admin/instagram/media", verifyAuth, requireAdmin, getMedia);
+app.delete("/api/admin/instagram/account", verifyAuth, requireAdmin, disconnectAccount);
+app.get("/api/admin/auto-dm/rules", verifyAuth, requireAdmin, getRules);
+app.post("/api/admin/auto-dm/rules", verifyAuth, requireAdmin, createRule);
+app.put("/api/admin/auto-dm/rules/:id", verifyAuth, requireAdmin, updateRule);
+app.delete("/api/admin/auto-dm/rules/:id", verifyAuth, requireAdmin, deleteRule);
 app.get('/api/admin/analytics/overview', verifyAuth, requireAdmin, getAdminOverviewAnalytics);
 app.get('/api/admin/creators/all', verifyAuth, requireAdmin, getAllCreators);
 app.get('/api/admin/creators/:uid/details', verifyAuth, requireAdmin, getCreatorDetails);

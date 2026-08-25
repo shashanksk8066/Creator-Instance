@@ -11,7 +11,9 @@ export const createRule = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const { accountId, selectedPosts, triggerType, keywords, greeting, body, ctaText, blogId, publicReply } = req.body;
+    const userDoc = await db.collection("users").doc(creatorId).get();
+    const isAdmin = userDoc.data()?.role === "admin";
+    const { accountId, customLink, selectedPosts, triggerType, keywords, greeting, body, ctaText, blogId, publicReply } = req.body;
 
     // Strict URL Validation for all message fields
     if (containsUrl(greeting) || containsUrl(body) || (publicReply && containsUrl(publicReply))) {
@@ -35,16 +37,23 @@ export const createRule = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    if (!blogId) {
+    if (!isAdmin && !blogId) {
       res.status(400).json({ error: 'Must select a blog to link' });
       return;
     }
 
-    // Verify blog belongs to creator and is published
-    const blogDoc = await db.collection('blogs').doc(blogId).get();
-    if (!blogDoc.exists || blogDoc.data()?.creatorId !== creatorId || blogDoc.data()?.status !== 'Published') {
-      res.status(403).json({ error: 'Invalid or unpublished blog selected' });
+    if (isAdmin && !blogId && !customLink) {
+      res.status(400).json({ error: 'Must provide either a blogId or customLink' });
       return;
+    }
+
+    // Verify blog belongs to creator and is published (if blogId is provided)
+    if (blogId) {
+      const blogDoc = await db.collection('blogs').doc(blogId).get();
+      if (!blogDoc.exists || (blogDoc.data()?.creatorId !== creatorId && !isAdmin) || blogDoc.data()?.status !== 'Published') {
+        res.status(403).json({ error: 'Invalid or unpublished blog selected' });
+        return;
+      }
     }
 
     const ruleData = {
@@ -56,7 +65,8 @@ export const createRule = async (req: Request, res: Response): Promise<void> => 
       greeting: greeting || '',
       body: body || '',
       ctaText: ctaText || 'Read More',
-      blogId,
+      blogId: blogId || null,
+      customLink: (isAdmin && customLink) ? customLink : null,
       publicReply: publicReply || null,
       status: 'active',
       createdAt: new Date().toISOString()
