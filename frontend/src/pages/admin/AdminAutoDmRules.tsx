@@ -16,9 +16,9 @@ export const AdminAutoDmRules = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [rulesRes, accountsRes, blogsRes] = await Promise.all([
-        fetch('/api/auto-dm/rules', { headers }),
-        fetch('/api/instagram/accounts', { headers }),
-        fetch('/api/blogs', { headers })
+        fetch('/api/admin/auto-dm/rules', { headers }),
+        fetch('/api/admin/instagram/accounts', { headers }),
+        fetch('/api/admin/blogs', { headers })
       ]);
       
       if (rulesRes.ok) {
@@ -55,7 +55,7 @@ export const AdminAutoDmRules = () => {
     const newStatus = rule.status === 'active' ? 'disabled' : 'active';
     try {
       const token = await auth.currentUser?.getIdToken();
-      await fetch(`/api/auto-dm/rules/${rule.id}`, {
+      await fetch(`/api/admin/auto-dm/rules/${rule.id}`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -73,7 +73,7 @@ export const AdminAutoDmRules = () => {
     if (!confirm('Are you sure you want to delete this rule?')) return;
     try {
       const token = await auth.currentUser?.getIdToken();
-      await fetch(`/api/auto-dm/rules/${id}`, {
+      await fetch(`/api/admin/auto-dm/rules/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

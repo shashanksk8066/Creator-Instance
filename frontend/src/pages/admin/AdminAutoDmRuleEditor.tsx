@@ -69,7 +69,7 @@ export const AdminAutoDmRuleEditor = () => {
       }
 
       // Fetch Blogs
-      const blogsRes = await fetch('/api/blogs', { headers });
+      const blogsRes = await fetch('/api/admin/blogs', { headers });
       if (blogsRes.ok) {
         const allBlogs = await blogsRes.json();
         setBlogs(allBlogs.filter((b: any) => b.status === 'Published'));

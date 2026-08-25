@@ -21,7 +21,7 @@ export const AdminInstagramIntegration = () => {
     if (!user) return;
     try {
       const token = await user.getIdToken();
-      const res = await fetch('/api/instagram/accounts', {
+      const res = await fetch('/api/admin/instagram/accounts', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -41,7 +41,7 @@ export const AdminInstagramIntegration = () => {
   const handleConnect = async () => {
     try {
       const token = await user?.getIdToken();
-      const res = await fetch('/api/instagram/auth-url', {
+      const res = await fetch('/api/admin/instagram/auth-url', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -61,7 +61,7 @@ export const AdminInstagramIntegration = () => {
     
     try {
       const token = await user?.getIdToken();
-      const res = await fetch('/api/instagram/account', {
+      const res = await fetch('/api/admin/instagram/account', {
         method: 'DELETE',
         headers: { 
             'Authorization': `Bearer ${token}`,
