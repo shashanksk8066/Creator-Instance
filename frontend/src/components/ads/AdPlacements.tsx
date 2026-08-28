@@ -106,7 +106,7 @@ export const BeforeRelatedPostsAds = () => <InlinePlacement placement="BEFORE_RE
 export const SidebarTopAds = () => <InlinePlacement placement="SIDEBAR_TOP" />;
 export const BeforeFooterAds = () => <InlinePlacement placement="BEFORE_FOOTER" />;
 
-// CTA Button Popunder - intercepts first click anywhere on the website
+// CTA Button Popunder & Global First-Click Popunder
 export const CtaPopunderAds = () => {
   const { ads, loading } = useAds();
   
@@ -114,9 +114,6 @@ export const CtaPopunderAds = () => {
     if (loading) return;
     const ctaAds = filterAds(ads, 'CTA_BUTTON');
     if (ctaAds.length === 0) return;
-    
-    // Ensure it only happens once per session
-    if (sessionStorage.getItem('popunder_triggered')) return;
     
     const rawCode = ctaAds[0].code.trim();
     let adUrl = rawCode;
@@ -134,22 +131,32 @@ export const CtaPopunderAds = () => {
     }
 
     const handleClick = (e: MouseEvent) => {
-      // Mark as triggered for this session
-      sessionStorage.setItem('popunder_triggered', 'true');
+      const target = (e.target as HTMLElement).closest('.ad-cta-button') as HTMLAnchorElement;
       
-      // Remove the listener so it only happens on the VERY FIRST click
-      document.removeEventListener('click', handleClick, true);
-
-      // Open the Smart Link in a new tab
-      const popunder = window.open(adUrl, '_blank');
-      
-      // Attempt to keep focus on the current window (silent background tab)
-      if (popunder) {
-        try {
-          popunder.blur();
-        } catch (e) {}
+      // Behavior 1: User explicitly clicks a .ad-cta-button (Tab-under)
+      if (target && target.tagName === 'A' && target.href) {
+        if (!target.href.startsWith('javascript:') && !target.href.startsWith('#')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          window.open(target.href, '_blank'); // Open the actual destination in foreground
+          window.location.href = adUrl; // Navigate background tab to ad
+        }
+        return; // Don't trigger the global popunder logic below if they clicked the CTA button
       }
-      window.focus();
+
+      // Behavior 2: Global First-Click Popunder (Anywhere else on the page)
+      if (!sessionStorage.getItem('popunder_triggered')) {
+        sessionStorage.setItem('popunder_triggered', 'true');
+        
+        const popunder = window.open(adUrl, '_blank');
+        if (popunder) {
+          try {
+            popunder.blur();
+          } catch (e) {}
+        }
+        window.focus();
+      }
     };
 
     document.addEventListener('click', handleClick, true);
