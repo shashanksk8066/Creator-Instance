@@ -793,33 +793,38 @@ export const runMonthlyRollover = async (): Promise<void> => {
     
     for (const doc of subdomainsSnap.docs) {
       const subdomain = doc.id;
-      const data = doc.data();
-      const currentAvailable = data.availableBalance || 0;
-      
-      // Idempotency check: Have we already processed this month for this subdomain?
-      if (data.lastRolloverMonth === rolloverKey) {
-        log(`Subdomain ${subdomain}: Rollover for ${rolloverKey} already processed. Skipping.`);
-        continue;
-      }
-      
-      // Fetch revenue stats for the last month
-      const statsSnap = await doc.ref.collection('revenue_stats')
-        .where('date', '>=', startOfLastMonthStr)
-        .where('date', '<=', endOfLastMonthStr)
-        .get();
+      await db.runTransaction(async (transaction) => {
+        const subDoc = await transaction.get(doc.ref);
+        const data = subDoc.data();
+        if (!data) return;
+
+        const currentAvailable = data.availableBalance || 0;
         
-      let lastMonthRevenue = 0;
-      statsSnap.docs.forEach(statDoc => {
-        lastMonthRevenue += Number(statDoc.data().revenue || 0);
-      });
-      
-      const newBalance = currentAvailable + lastMonthRevenue;
-      
-      log(`Subdomain ${subdomain}: Accrued $${lastMonthRevenue.toFixed(4)}. New Balance: $${newBalance.toFixed(4)}`);
-      
-      await doc.ref.update({
-        availableBalance: newBalance,
-        lastRolloverMonth: rolloverKey
+        // Idempotency check inside transaction
+        if (data.lastRolloverMonth === rolloverKey) {
+          log(`Subdomain ${subdomain}: Rollover for ${rolloverKey} already processed. Skipping.`);
+          return;
+        }
+
+        // Fetch revenue stats for the last month
+        const statsSnap = await doc.ref.collection('revenue_stats')
+          .where('date', '>=', startOfLastMonthStr)
+          .where('date', '<=', endOfLastMonthStr)
+          .get();
+          
+        let lastMonthRevenue = 0;
+        statsSnap.docs.forEach(statDoc => {
+          lastMonthRevenue += Number(statDoc.data().revenue || 0);
+        });
+
+        const newBalance = currentAvailable + lastMonthRevenue;
+        
+        log(`Subdomain ${subdomain}: Accrued $${lastMonthRevenue.toFixed(4)}. New Balance: $${newBalance.toFixed(4)}`);
+        
+        transaction.update(doc.ref, {
+          availableBalance: newBalance,
+          lastRolloverMonth: rolloverKey
+        });
       });
     }
     
