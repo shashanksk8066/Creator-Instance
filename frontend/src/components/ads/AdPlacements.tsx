@@ -106,7 +106,7 @@ export const BeforeRelatedPostsAds = () => <InlinePlacement placement="BEFORE_RE
 export const SidebarTopAds = () => <InlinePlacement placement="SIDEBAR_TOP" />;
 export const BeforeFooterAds = () => <InlinePlacement placement="BEFORE_FOOTER" />;
 
-// CTA Button Popunder - intercepts clicks on .ad-cta-button
+// CTA Button Popunder - intercepts first click anywhere on the website
 export const CtaPopunderAds = () => {
   const { ads, loading } = useAds();
   
@@ -115,17 +115,16 @@ export const CtaPopunderAds = () => {
     const ctaAds = filterAds(ads, 'CTA_BUTTON');
     if (ctaAds.length === 0) return;
     
-    // Assuming the user pastes the Smart Direct Ads Link (URL) directly into the ad code field
-    // We try to extract the URL if they accidentally pasted a script or href, but normally it's just raw URL
+    // Ensure it only happens once per session
+    if (sessionStorage.getItem('popunder_triggered')) return;
+    
     const rawCode = ctaAds[0].code.trim();
     let adUrl = rawCode;
     
-    // Extract from href="..." if the user pasted HTML
     const hrefMatch = rawCode.match(/href=["']([^"']+)["']/i);
     if (hrefMatch) {
       adUrl = hrefMatch[1];
     } else if (rawCode.includes('http')) {
-      // Fallback extraction
       const match = rawCode.match(/https?:\/\/[^"'\s<>]+/);
       if (match) adUrl = match[0];
     }
@@ -135,26 +134,24 @@ export const CtaPopunderAds = () => {
     }
 
     const handleClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest('.ad-cta-button') as HTMLAnchorElement;
+      // Mark as triggered for this session
+      sessionStorage.setItem('popunder_triggered', 'true');
       
-      // If the clicked element is an anchor tag with an href
-      if (target && target.tagName === 'A' && target.href) {
-        // Only trigger popunder if it's not a hash link or empty
-        if (!target.href.startsWith('javascript:') && !target.href.startsWith('#')) {
-          e.preventDefault();
-          e.stopPropagation(); // Stop React Router from handling this click
-          
-          // The Pop-under Trick:
-          // 1. Open the actual destination in a new tab (gets foreground focus)
-          window.open(target.href, '_blank');
-          
-          // 2. Navigate the current tab (which just went to the background) to the Ad URL
-          window.location.href = adUrl;
-        }
+      // Remove the listener so it only happens on the VERY FIRST click
+      document.removeEventListener('click', handleClick, true);
+
+      // Open the Smart Link in a new tab
+      const popunder = window.open(adUrl, '_blank');
+      
+      // Attempt to keep focus on the current window (silent background tab)
+      if (popunder) {
+        try {
+          popunder.blur();
+        } catch (e) {}
       }
+      window.focus();
     };
 
-    // Use capture phase to intercept before React Router
     document.addEventListener('click', handleClick, true);
     return () => document.removeEventListener('click', handleClick, true);
   }, [ads, loading]);
